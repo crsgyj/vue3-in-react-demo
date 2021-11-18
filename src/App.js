@@ -1,25 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { watch } from 'vue';
+import { sysStore } from './store';
+import CountPanel from './CountPanel'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  stopWatch = null
+  constructor(props) {
+    super(props);
+  }
+  componentDidMount() {
+   this.stopWatch = watch(() => sysStore.count, (v) => {
+      this.setState({});
+    });
+  }
+
+  componentWillUnmount() {
+    this.stopWatch && this.stopWatch()
+  }
+
+  addCount() {
+    sysStore.count++;
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <div>
+          <p>son:</p>
+          <CountPanel></CountPanel>
+        </div>
+        <div>
+          <p>father:</p>
+          <span style={{ marginRight: 20}}>{sysStore.count}</span>
+          <button onClick={() => this.addCount()}>+1</button>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default App;
